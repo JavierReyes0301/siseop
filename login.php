@@ -1,64 +1,53 @@
 <?php
-// login.php: Procesa el formulario de inicio de sesión de forma segura.
+// login.php: Procesa el formulario de inicio de sesión con Supabase (PostgreSQL)
 session_start();
 
-// --- Configuración de la base de datos ---
-$servername = "localhost";
-$username_db = "root"; 
-$password_db = "";     
-$dbname = "siseop_db"; 
-// NOTA: El puerto 3306 es el predeterminado. No necesitamos especificarlo explícitamente.
+// --- Configuración de Supabase (Extraído de tu cadena de conexión) ---
+$host = "db.maopuzbvxucsarrydmte.supabase.co";
+$port = "5432";
+$dbname = "postgres";
+$user = "postgres";
+$password = "J19941203030127r"; // Reemplaza [YOUR-PASSWORD] con la real
 
-// Conectar a la base de datos
-$conn = new mysqli($servername, $username_db, $password_db, $dbname);
-
-// Verificar la conexión a la BD inmediatamente
-if ($conn->connect_error) {
-    die("Error de conexión a la base de datos: " . $conn->connect_error);
+try {
+    // Conexión usando PDO (necesario para PostgreSQL/Supabase)
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conn = new PDO($dsn, $user, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Error de conexión a Supabase: " . $e->getMessage());
 }
 
-// Verificar si la petición es POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Usamos 'email' aquí porque es el nombre del campo en tu formulario HTML (asumimos)
-    $email_input = htmlspecialchars($_POST['email']);
-    $password_input = htmlspecialchars($_POST['password']);
+    // Limpiamos el email, pero NO la contraseña (para no alterar caracteres especiales)
+    $email_input = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    $password_input = $_POST['password'];
 
-    // --- CORRECCIÓN CLAVE ---
-    // Usar consultas preparadas: Seleccionamos 'id', 'password_hash' y 'usuario'
-    // Los nombres coinciden exactamente con tu tabla.
-    $stmt = $conn->prepare("SELECT id, password_hash, usuario FROM usuarios WHERE email = ?");
-    
-    if ($stmt === false) {
-        die("Error en la preparación de la consulta: " . $conn->error);
-    }
-    
-    $stmt->bind_param("s", $email_input); // "s" significa que el parámetro es string
-    $stmt->execute();
-    $result = $stmt->get_result();
+    try {
+        // Consulta preparada con PDO
+        $stmt = $conn->prepare("SELECT id, password_hash, usuario FROM usuarios WHERE email = :email");
+        $stmt->execute(['email' => $email_input]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($row = $result->fetch_assoc()) {
-        // Verificar la contraseña con la función segura de PHP
-        if (password_verify($password_input, $row['password_hash'])) {
-            // ÉXITO: Inicia sesión y REDIRECCIONA
+        if ($row) {
+            // Verificar contraseña
+            if (password_verify($password_input, $row['password_hash'])) {
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['user_name'] = $row['usuario'];
+                $_SESSION['loggedin'] = true; 
 
-            // Asignar variables de sesión usando el nombre de columna 'usuario'
-            $_SESSION['user_id'] = $row['id'];
-            $_SESSION['user_name'] = $row['usuario']; // Corregido de 'nombre' a 'usuario'
-            $_SESSION['loggedin'] = true; 
-
-            // Redireccionar al dashboard 
-            header("Location: dashboard.php"); 
-            exit(); 
+                header("Location: dashboard.php"); 
+                exit(); 
+            } else {
+                die("Error: Contraseña incorrecta.");
+            }
         } else {
-            // ERROR: Contraseña incorrecta
-            die("Error: Contraseña incorrecta.");
+            die("Error: Correo electrónico no registrado.");
         }
-    } else {
-        // ERROR: Correo electrónico no registrado
-        die("Error: Correo electrónico no registrado.");
+    } catch (PDOException $e) {
+        die("Error en la consulta: " . $e->getMessage());
     }
 } else {
-    // Si alguien intenta acceder a login.php directamente sin un POST
     header("Location: index.html");
     exit();
 }
