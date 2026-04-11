@@ -1,78 +1,1214 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" style="height: auto;">
+  <!-- START: Head-->
   <head>
     <meta charset="utf-8" />
     <title>SISEOP</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- START: Template CSS-->
+    <!-- <link rel="stylesheet" href="https://grave-gusty-grain.glitch.me/dist/vendors/bootstrap/css/bootstrap.min.css"> -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
   </head>
-  <body id="main-container" class="default" style="background-color: #7b7d7d">
-    <div class="container" style="background-color: #ccd1d1">
-      <div class="row vh-100 align-items-center">
-        <h1 class="text-center">
-          Sistema de Seguimiento de Obras Públicas
-          <br>
-          "SISEOP"
-        </h1>
-        <div class="row g-2">
-          <div class="col-5 text-end"> 
-            <img
-              src="https://cdn.glitch.global/415da8bf-75f2-46e4-8d5d-bce9c6d4673b/Logotipo%20sin%20fondo%20-%20copia.png?v=1728097065368"
-              width="200"
-              height="200"
-            />
+<body id="main-container" class="layout-top-nav" style="height: auto">
+    <div id="header-fix" class="header fixed">
+      <div class="site-width">
+        <nav class="navbar expand" style="background-color: #d5d8dc">
+          <img
+            src="https://rrdymquuhpuloormvexj.supabase.co/storage/v1/object/public/Imag/Logotipo%20sin%20fondo.png"
+            alt="Logo"
+            width="90"
+            height="90"
+          />
+          <div class="navbar-brand align-text-center" href="#">
+            <strong>SISTEMA DE SEGUIMIENTO DE OBRAS PÚBLICAS</strong>
           </div>
-          <div class="col-7">
-            <!-- CAMBIO CLAVE: action apunta directamente a login.php -->
-            <form action="login.php" class="row row-eq-height" method="post">
-              <div class="login-form col-5 col-sm-7">
-                <div class="form-group mb-3">
-                  <label for="emailaddress">Correo electrónico</label>
-                  <input
-                    class="form-control"
-                    type="email"
-                    id="emailaddress"
-                    name="email"
-                    required=""
-                    placeholder="Ingresa tu Correo electrónico"
-                    autofocus=""
-                  />
-                </div>
-                <div class="form-group mb-3">
-                  <label for="password">Contraseña</label>
-                  <input
-                    class="form-control"
-                    type="password"
-                    required=""
-                    name="password"
-                    id="password"
-                    placeholder="Ingresa la contraseña"
-                  />
-                </div>
-                
-                <!-- Este div de alerta ya no es funcional sin JavaScript -->
-                <div id="alertMessage" class="alert d-none"></div>
-
-                <div class="form-group mb-0">
-                  <button
-                    class="btn btn-primary"
-                    type="submit"
-                    data-loading-text="Iniciando..."
-                  >
-                    Iniciar sesión
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
+        </nav>
+      </div>
+      <div class="top-menu">
+        <nav class="navbar navbar-expand" style="background-color: #566573">
+          <strong class="navbar-nav">
+            <li id="home" class="nav-item active">
+              <a class="nav-link" href="siseop.glitch.me">
+                <i class="nav-icon"></i>Inicio
+              </a>
+            </li>
+            <li id="records">
+              <a class="nav-link" href="registros-siseop.glitch.me">
+                <i class="nav-icon"></i>Registros
+              </a>
+            </li>
+            <!-- Nuevo elemento de cierre de sesión -->
+            <li id="logout">
+              <!-- El href ahora apunta a la ruta de tu archivo de inicio de sesión -->
+              <a class="nav-link" href="index.html"> 
+                <i class="nav-icon"></i>Cerrar sesión
+              </a>
+            </li>
+          </strong>
+        </nav>
       </div>
     </div>
-    <!-- ELIMINAMOS TODO EL BLOQUE <script> JavaScript de aquí -->
+    <main id="app" class="app-front-end app-content-full-height">
+      <div class="container-fluid site-width">
+        <div class="container bg-light">
+          <section id="content" class="app-content">
+            <div class="amcharts-main-div" style="position: center">
+              <div class="card card-body border-0 mt-3 rounded-2">
+                <div class="row g-2">
+                  <div class="col-sm-6" >
+                    <center>
+                      <strong class="d-block mb-0 text-center">Clasificación por Estatus de la Obra</strong>
+                      <div style="width: 320px">
+                        <canvas id="graficapie"></canvas>
+                      </div>
+                      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js">
+                      </script>
+                      <script>
+                        const $grafica = document.querySelector("#graficapie");
+                        const etiquetas = ["Terminadas", "En Proceso", "Canceladas", "No Iniciadas"]
+                        const datos = {
+                          data: [4, 6, 2, 3],
+                          backgroundColor: [
+                            'rgba(163,221,203,0.2)',
+                            'rgba(232,233,161,0.2)',
+                            'rgba(230,181,102,0.2)',
+                            'rgba(229,112,126,0.2)',],
+                          borderColor: [
+                            'rgba(163,221,203,1)',
+                            'rgba(232,233,161,1)',
+                            'rgba(230,181,102,1)',
+                            'rgba(229,112,126,1)',],
+                          borderWidth: 2,
+                        };
+                        new Chart($grafica, {
+                          type: 'pie',
+                          data: {
+                            labels: etiquetas,
+                            datasets: [
+                              datos,]
+                          },
+                        });
+                      </script>
+                    </center>
+                  </div>
+                  <div class="col-sm-6 mt-5" >
+                    <p/>
+                    <center>
+                      <strong class="d-block mb-0 text-center">Presupuesto Contratado y Ejercido</strong>
+                      <div style="width: 500px">
+                        <canvas id="myChart"></canvas>
+                      </div>
+                      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                      <script>
+                        const ctx = document.getElementById('myChart');
+                        new Chart(ctx, {
+                          type: 'bar',
+                          data: {
+                            labels: ['Monto Contratado y Administrado', 'Monto Ejercido'],
+                            labelscolors: ['Monto Contratado', 'Monto Ejercido'],
+                            datasets: [{
+                              label: 'Millones de Pesos',
+                              data: [28500000, 14000000],
+                              backgroundColor: [
+                                'rgba(232,233,161,0.2)',
+                                'rgba(163,221,203,0.2)',],
+                              borderColor: [
+                                'rgba(232,233,161,1)',
+                                'rgba(163,221,203,1)',
+                              ],
+                              borderWidth: 2,
+                            }]
+                          },
+                          options: {
+                            scales: {
+                              y: {
+                                beginAtZero: true,
+                              }
+                            }
+                          }
+                        });
+                      </script>
+                    </center>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-body border-0 mt-3 rounded-2">
+              <div class="col-sm-0 py-2">
+                <div class="row g-2">
+                  <div class="col-sm-6">
+                    <div class="card text-white text-center" style="background-color: #7f8c8d">
+                      <h1 class="display fw-bold mb-0" id="">13</h1>
+                      <small class="mb-0 small">Total de Obras Contratadas</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card text-white text-center" style="background-color: #7f8c8d">
+                      <h1 class="display fw-bold mb-0" id="">2</h1>
+                      <small class="mb-0 small">Total de Obras Administradas</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-0 py-2">
+                <div class="row g-2">
+                  <div class="col-sm-6" >
+                    <div class="card text-white text-center" style="background-color: #e67e22">
+                      <h1 class="display fw-bold mb-0" id="">$22,250,000.00</h1>
+                      <small class="mb-0 small">Monto Total Contratado (MXN)</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" >
+                    <div class="card text-white text-center" style="background-color: #e67e22">
+                      <h1 class="display fw-bold mb-0" id="">$6,250,000.00</h1>
+                      <small class="mb-0 small">Presupuesto Total Administrado (MXN)</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-0 py-2">
+                <div class="row g-2">
+                  <div class="col-sm-6" >
+                    <div class="card text-white text-center" style="background-color: #229954">
+                      <h1 class="display fw-bold mb-0" id="">$10,250,000.00</h1>
+                      <small class="mb-0 small">Monto Total Ejercido por Contrato (MXN)</small>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="card text-white text-center" style="background-color: #229954">
+                      <h1 class="display fw-bold mb-0" id="">$3,750,000.00</h1>
+                      <small class="mb-0 small">Monto Total Ejercido por Admon. Directa (MXN)</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-0 py-2">
+                <div class="col-sm-0">
+                  <div class="card text-white text-center" style="background-color: #5dade2">
+                    <h1 class="display fw-bold mb-0" id="">$14,000,000.00</h1>
+                    <small class="mb-0 small">Gran Total Ejercido (MXN)</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-body border-0 mt-3 rounded-2">
+              <div class="col-sm-0 py-2">
+                <div class="row g-2">
+                  <div class="col-sm-6" >
+                    <div class="card p-2" style="max-width: auto;">
+                      <div class="row g-0" >
+                        <div class="col-md-4 d-flex align-items-center justify-content-center" >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
+                            <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+                            <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/></svg>
+                        </div>
+                        <div class="col-md-8" >
+                          <div class="card-body" >
+                            <h1 class="card-title text-center" >Obras Terminadas</h1>
+                            <h2 class="text-title text-center">
+                              <a class="nav-link" href="https://terminadas.glitch.me/">
+                                <i class="nav-icon"></i>4
+                              </a>
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" >
+                    <div class="card p-2" style="max-width: auto;">
+                      <div class="row g-0" >
+                        <div class="col-md-4 d-flex align-items-center justify-content-center" >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-building-gear" viewBox="0 0 16 16">
+                            <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+                            <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.386 1.46c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0"/>
+                          </svg>
+                        </div>
+                        <div class="col-md-8" >
+                          <div class="card-body" >
+                            <h1 class="card-title text-center" >Obras En Proceso</h1>
+                            <h2 class="text-title text-center">
+                              <a class="nav-link" href="https://en-proceso.glitch.me/">
+                                <i class="nav-icon"></i>6
+                              </a>
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" >
+                    <div class="card p-2" style="max-width: auto;">
+                      <div class="row g-0" >
+                        <div class="col-md-4 d-flex align-items-center justify-content-center" >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-building-slash" viewBox="0 0 16 16">
+                            <path d="M13.879 10.414a2.501 2.501 0 0 0-3.465 3.465zm.707.707-3.465 3.465a2.501 2.501 0 0 0 3.465-3.465m-4.56-1.096a3.5 3.5 0 1 1 4.949 4.95 3.5 3.5 0 0 1-4.95-4.95Z"/>
+                            <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+                            <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/></svg>
+                          </div>
+                        <div class="col-md-8" >
+                          <div class="card-body" >
+                            <h1 class="card-title text-center" >Obras Canceladas</h1>
+                            <h2 class="text-title text-center">
+                              <a class="nav-link" href="https://canceladas.glitch.me/">
+                                <i class="nav-icon"></i>2
+                              </a>
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6" >
+                    <div class="card p-2" style="max-width: auto;">
+                      <div class="row g-0" >
+                        <div class="col-md-4 d-flex align-items-center justify-content-center" >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-building-exclamation" viewBox="0 0 16 16">
+                            <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+                            <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm8.5 4.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-3.5-2a.5.5 0 0 0-.5.5v1.5a.5.5 0 0 0 1 0V11a.5.5 0 0 0-.5-.5m0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1"/>
+                          </svg>
+                        </div>
+                        <div class="col-md-8" >
+                          <div class="card-body" >
+                            <h1 class="card-title text-center" >Obras No Iniciadas</h1>
+                              <h2 class="text-title text-center">
+                              <a class="nav-link" href="https://no-iniciadas.glitch.me/">
+                                <i class="nav-icon"></i>3
+                              </a>
+                            </h2>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card card-body border-0 mt-3 rounded-2">
+              <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapseOne"
+                        aria-expanded="true"
+                        aria-controls="collapseOne"
+                            >
+                      <strong>Por Estatus de la Obras</strong>
+                    </button>
+                  </h2>
+                  <div
+                      id="collapseOne"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample"
+                       >
+                    <div class="accordion-body">
+                      <div>
+                        <table class="table table-striped small text-center">
+                          <thead>
+                            <tr>
+                              <th>Estatus</th>
+                              <th>Total de Contratos</th>
+                              <th>Monto Total Contratado</th>
+                              <th>Monto Total Ejercido</th>
+                            </tr>
+                          </thead>
+                          <tr>
+                            <td class="text-center">
+                              <span class="chapter">Obras Terminadas</span>
+                            </td>
+                            <td class="text-center">
+                              <a
+                                 class="nav-link"
+                                 href="https://terminadas.glitch.me/"
+                                 >
+                                <i class="nav-icon"></i>4
+                              </a>
+                            </td>
+                            <td class="text-center">
+                              <span
+                                    class="contracted amount"
+                                    >$7,800,000.00</span>
+                            </td>
+                            <td class="text-center">
+                              <span class="amount paid">$6,100,000.00</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-center">
+                              <span class="chapter">Obras en Proceso</span>
+                            </td>
+                            <td class="text-center">
+                              <a
+                                 class="nav-link"
+                                 href="https://en-proceso.glitch.me/"
+                                 >
+                                <i class="nav-icon"></i>6
+                              </a>
+                            </td>
+                            <td class="text-center">
+                              <span class="contracted amount">$14,000,000.00</span>
+                            </td>
+                            <td class="text-center">
+                              <span class="amount paid">$6,000,000.00</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-center">
+                              <span class="chapter">Obras Canceladas</span>
+                            </td>
+                            <td class="text-center">
+                              <a
+                                 class="nav-link"
+                                 href="https://canceladas.glitch.me/"
+                                 >
+                                <i class="nav-icon"></i>2
+                              </a>
+                            </td>
+                            <td class="text-center">
+                              <span class="contracted amount">$1,950,000.00</span>
+                            </td>
+                            <td class="text-center">
+                              <span class="amount paid">$0.00</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-center">
+                              <span class="chapter">Obras No Iniciadas</span>
+                            </td>
+                            <td class="text-center">
+                              <a
+                                 class="nav-link"
+                                 href="https://no-iniciadas.glitch.me/"
+                                 >
+                                <i class="nav-icon"></i>3
+                              </a>
+                            </td>
+                            <td class="text-center">
+                              <span class="contracted amount">$4,750,000.00</span>
+                            </td>
+                            <td class="text-center">
+                              <span class="amount paid">$1,900,000.00</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="text-center">
+                              <span class="grand total">Gran Total</span>
+                            </th>
+                            <th class="text-center">
+                              <span class="addition">15</span>
+                            </th>
+                            <th class="text-center">
+                              <span class="contracted amount">$28,500,000.00</span>
+                            </th>
+                            <th class="text-center">
+                              <span class="amount paid">$14,000,000.00</span>
+                            </th>
+                          </tr>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsethree"
+                        aria-expanded="false"
+                        aria-controls="collapsethree"
+                            >
+                      <strong>Por Fondo/Programa</strong>
+                    </button>
+                  </h2>
+                  <div
+                      id="collapsethree"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample"
+                       >
+                    <div class="accordion-body">
+                      <div>
+                        <table class="table table-striped small text-center">
+                          <thead>
+                            <tr>
+                              <th>Fondo/Programa</th>
+                              <th>Total de Contratos</th>
+                              <th>Monto Total Contratado</th>
+                              <th>Monto Total Pagado</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="text-center">
+                                <span class="program">Recursos Propios (REC PROP)</span>
+                              </td>
+                              <td class="text-center">
+                                <a
+                                   class="nav-link"
+                                   href="https://recursos-propios.glitch.me/"
+                                   >
+                                  <i class="nav-icon"></i>3
+                                </a>
+                              </td>
+                              <td class="text-center">
+                                <span class="contracted amount">$6,250,000.00</span>
+                              </td>
+                              <td class="text-center">
+                                <span class="amount paid">$3,750,000.00</span>
+                              </td>
+                            </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="program">Fondo de Aportaciones para la Infraestructura Social Estatal (FISE)</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://fise.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>4
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$6,800,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$3,250,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="program">Fondo de Aportaciones para el Fortalecimiento de las Entidades Federativas (FAFEF)</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://fafef.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>1
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$1,050,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$650,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="program">Fondo de Aportaciones para la Infraestructura Social Municipal (FISM) </span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://fism.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>4
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$5,900,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$2,000,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="program">Fondo de Aportaciones para el Fortalecimiento de los Municipios (FORTAMUN)</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://fortamun.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>3
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$8,500,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$4,350,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th class="text-center">
+                                  <span class="grand total">Gran Total</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="addition">15</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="contracted amount">$28,500,000.00</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="amount paid">$14,000,000.00</span>
+                                </th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsefour"
+                        aria-expanded="false"
+                        aria-controls="collapsefour"
+                      >
+                        <strong>Por Tipo de Modalidad</strong>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapsefour"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <div>
+                          <table class="table table-striped small text-center">
+                            <thead>
+                              <tr>
+                                <th>Modalidad de Adjudicación</th>
+                                <th>Total de Contratos</th>
+                                <th>Monto Total Contratado</th>
+                                <th>Monto Total Pagado</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="mode">Licitación Pública</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://licitacion-publica.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>4
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$11,000,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$5,200,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="mode">Invitación a Cuando Menos Cinco Personas</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="count">0</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$0.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$0.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="mode">Invitación a Cuando Menos Tres Personas</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://inv-a-3.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>6
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$9,300,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$5,050,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="mode">Adjudicación Directa</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://adjudicacion-directa.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>3
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$2,700,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$750,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="mode">Administración Directa</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://admon-directa.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$5,500,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$3,000,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th class="text-center">
+                                  <span class="grand total">Gran Total</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="addition">15</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="contracted amount">$28,500,000.00</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="amount paid">$14,000,000.00</span>
+                                </th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsefive"
+                        aria-expanded="false"
+                        aria-controls="collapsefive"
+                      >
+                        <strong>Por Contratista</strong>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapsefive"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <div>
+                          <table class="table table-striped small text-center">
+                            <thead>
+                              <tr>
+                                <th>Nombre o Razon Social</th>
+                                <th>Total de Contratos</th>
+                                <th>Monto Total Contratado</th>
+                                <th>Monto Total Pagado</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Constructora del Pacifico Mumu S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="count">1</span>
+                                </td>
+                                <td class="text-center">
+                                  <span
+                                    class="contracted amount"
+                                  >$1,600,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span
+                                    class="monto pagado"
+                                  >$1,200,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Warham Group S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://warham-group.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">
+                                    $5,850,000.00
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$2,800,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Condado Construcciones S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="count">1</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">
+                                    $1,050,000.00
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$650,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Tesvi Planeacion y Construcción S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                   <a
+                                    class="nav-link"
+                                    href="https://tesvi-planeacion-y-construccion.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>3
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">
+                                    $2,700,000.00
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$750,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">HUTG Construcciones S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://hutg-construcciones.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                  <span
+                                    class="contracted amount"
+                                  >$6,150,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$3,950,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Materiales y Concretos Hidráulicos El Angel S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://materiales-y-concretos-hidraulicos-el-angel.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$3,000,000.00
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$1,100,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Constructora Vazay S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://constructora-vazay.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">
+                                    $3,900,000.00
+                                  </span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$1,900,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Constructora Tiyaca S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="count">1</span>
+                                </td>
+                                <td class="text-center">
+                                  <span
+                                    class="contracted amount"
+                                  >$1,750,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$800,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="supplier">Constructora ABC S.A. de C.V.</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="count">1</span>
+                                </td>
+                                <td class="text-center">
+                                  <span
+                                    class="contracted amount"
+                                  >$2,500,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$850,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th class="text-center">
+                                  <span class="grand total">Gran Total</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="addition">15</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="contracted amount">$28,500,000.00</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="amount paid">$14,000,000.00</span>
+                                </th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapsesix"
+                        aria-expanded="false"
+                        aria-controls="collapsesix"
+                      >
+                        <strong>Por Tipo de Contrato</strong>
+                      </button>
+                    </h2>
+                    <div
+                      id="collapsesix"
+                      class="accordion-collapse collapse"
+                      data-bs-parent="#accordionExample"
+                    >
+                      <div class="accordion-body">
+                        <div>
+                          <table class="table table-striped small text-center">
+                            <thead>
+                              <tr>
+                                <th>Tipo de Contrato</th>
+                                <th>Total de Contratos</th>
+                                <th>Monto Total Contratado</th>
+                                <th>Monto Total Pagado</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="guy">Obras Publicas</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://tipo-obra.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>13
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$26,550,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$14,000,000.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="text-center">
+                                  <span class="guy">Servicios Relacionados</span>
+                                </td>
+                                <td class="text-center">
+                                  <a
+                                    class="nav-link"
+                                    href="https://tipo-servicios.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                                  </a>
+                                </td>
+                                <td class="text-center">
+                                  <span class="contracted amount">$1,950,000.00</span>
+                                </td>
+                                <td class="text-center">
+                                  <span class="amount paid">$0.00</span>
+                                </td>
+                              </tr>
+                              <tr>
+                                <th class="text-center">
+                                  <span class="grand total">Gran Total</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="addition">15</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="contracted amount">$28,500,000.00</span>
+                                </th>
+                                <th class="text-center">
+                                  <span class="amount paid">$14,000,000.00</span>
+                                </th>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="card card-body border-0 mt-3 rounded-2">
+              <nav class="navbar" style="background-color: #bdc3c7">
+                <div class="container-fluid site-width">
+                  <span class="navbar-text text-center"><strong>Estatus de la Obra</strong></span>
+                </div>
+                <table class="table table-striped small text-center">
+                  <thead>
+                    <tr>
+                      <th>No.Cvo.</th>
+                      <th>Estatus</th>
+                      <th>Servicios Relacionados</th>
+                      <th>Obra Pública</th>
+                      <th>Total de Contratos</th>
+                      <th>Monto Contratado</th>
+                      <th>Monto Pagado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center">
+                        <span tabindex="0" class="sorting_1">1</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="administrative unit">Terminadas</span>
+                      </td>
+                      <td class="text-center">
+                         <a
+                                    class="nav-link"
+                                    href="#"
+                                  >
+                                    <i class="nav-icon"></i>0
+                        
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://terminadas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>4
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://terminadas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>4
+                      </td>
+                      <td class="text-center">
+                        <span class="contracted amount">$7,800,000.00</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="amount paid">$6,100,000.00</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">
+                        <span tabindex="0" class="sorting_1">2</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="administrative unit">En Proceso</span>
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="#"
+                                  >
+                                    <i class="nav-icon"></i>0
+                      </td>
+                      <td class="text-center">
+                       <a
+                                    class="nav-link"
+                                    href="https://en-proceso.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>6
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://en-proceso.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>6
+                      </td>
+                      <td class="text-center">
+                        <span class="contracted amount">$14,000,000.00</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="amount paid">$6,000,000.00</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">
+                        <span tabindex="0" class="sorting_1">3</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="administrative unit">No Iniciadas</span>
+                      </td>
+                      <td class="text-center">
+                       <a
+                                    class="nav-link"
+                                    href="#"
+                                  >
+                                    <i class="nav-icon"></i>0
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://no-iniciadas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>3
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://no-iniciadas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>3
+                      </td>
+                      <td class="text-center">
+                        <span class="contracted amount">$4,750,000.00</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="amount paid">$1,900,000.00</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="text-center">
+                        <span tabindex="0" class="sorting_1">4</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="administrative unit">Canceladas</span>
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://canceladas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="#"
+                                  >
+                                    <i class="nav-icon"></i>0
+                      </td>
+                      <td class="text-center">
+                        <a
+                                    class="nav-link"
+                                    href="https://canceladas.glitch.me/"
+                                  >
+                                    <i class="nav-icon"></i>2
+                      </td>
+                      <td class="text-center">
+                        <span class="contracted amount">$1,950,000.00</span>
+                      </td>
+                      <td class="text-center">
+                        <span class="amount paid">$0.00</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="text-center">
+                        <span tabindex="0" class="sorting_1"></span>
+                      </th>
+                      <th class="text-center">
+                        <span class="administrative unit">Gran Total</span>
+                      </th>
+                      <th class="text-center">
+                        <span class="count">2</span>
+                      </th>
+                      <th class="text-center">
+                        <span class="count">13</span>
+                      </th>
+                      <th class="text-center">
+                        <span class="count">15</span>
+                      </th>
+                      <th class="text-center">
+                        <span class="contracted amount">$28,500,000.00</span>
+                      </th>
+                      <th class="text-center">
+                        <span class="amount paid">$14,000,000.00</span>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </nav>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="navbar-expand text-center" style="background-color: #566573">
+      Sistema de Seguimiento de Obras Públicas ©
+    </footer>
   </body>
 </html>
