@@ -28,23 +28,47 @@
     <div id="header-fix" class="header fixed">
       <div class="site-width">
         <nav class="navbar expand" style="background-color: #d5d8dc">
-          <div class="navbar-brand align-text-right" href="#">
+          <div class="navbar-brand align-text-left" href="#">
             <strong>Sistema de Seguimiento de Obras Públicas</strong>
           </div>
         </nav>
       </div>
       <div class="top-menu">
-        <nav class="navbar navbar-expand" style="background-color: #566573">
+        <!-- Se añadió justify-content-end para alinear todo a la derecha -->
+        <nav
+          class="navbar navbar-expand justify-content-end"
+          style="background-color: #566573"
+        >
           <strong class="navbar-nav">
             <li id="home" class="nav-item active">
               <a class="nav-link" href="javascript:void(0);">
                 <i class="nav-icon"></i>Inicio
               </a>
             </li>
+
             <li id="records">
               <a class="nav-link" href="javascript:void(0);">
                 <i class="nav-icon"></i>Registros
               </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Año
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" href="javascript:void(0);">2025</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="javascript:void(0);">2024</a>
+                </li>
+              </ul>
             </li>
             <!-- Nuevo elemento de cierre de sesión -->
             <li id="logout">
