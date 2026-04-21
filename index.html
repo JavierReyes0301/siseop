@@ -112,50 +112,73 @@
             <div class="amcharts-main-div" style="position: center">
               <div class="card card-body border-0 mt-3 rounded-2">
                 <div class="row g-2">
-                  <div class="col-sm-6">
-                    <center>
-                      <strong class="d-block mb-0 text-center"
-                        >Clasificación por Estatus de la Obra</strong
-                      >
-                      <div style="width: 320px">
-                        <canvas id="graficapie"></canvas>
-                      </div>
-                      <script
-                        type="text/javascript"
-                        src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"
-                      ></script>
-                      <script>
-                        const $grafica = document.querySelector("#graficapie");
-                        const etiquetas = [
-                          "Terminadas",
-                          "En Proceso",
-                          "Canceladas",
-                          "No Iniciadas",
-                        ];
-                        const datos = {
-                          data: [4, 6, 2, 3],
-                          backgroundColor: [
-                            "rgba(163,221,203,0.2)",
-                            "rgba(232,233,161,0.2)",
-                            "rgba(230,181,102,0.2)",
-                            "rgba(229,112,126,0.2)",
-                          ],
-                          borderColor: [
-                            "rgba(163,221,203,1)",
-                            "rgba(232,233,161,1)",
-                            "rgba(230,181,102,1)",
-                            "rgba(229,112,126,1)",
-                          ],
-                          borderWidth: 2,
-                        };
-                        new Chart($grafica, {
-                          type: "pie",
-                          data: {
-                            labels: etiquetas,
-                            datasets: [datos],
-                          },
-                        });
-                      </script>
+                  <div class="col-sm-6 mb-4">
+  <div class="d-flex flex-column align-items-center">
+    <strong class="d-block mb-2 text-center">Clasificación por Estatus de la Obra</strong>
+    <!-- Se quitó el width fijo y se agregó una clase de ancho máximo -->
+    <div style="width: 100%; max-width: 320px;">
+      <canvas id="graficapie"></canvas>
+    </div>
+  </div>
+</div>
+
+<div class="col-sm-6 mt-sm-5 mb-4">
+  <div class="d-flex flex-column align-items-center">
+    <strong class="d-block mb-2 text-center">Presupuesto Contratado y Ejercido</strong>
+    <!-- Se cambió a 100% para que use todo el ancho de la columna en móvil -->
+    <div style="width: 100%; max-width: 500px;">
+      <canvas id="myChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Solo necesitas cargar Chart.js una vez, usa la versión más reciente -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Gráfica de Pie
+  const $grafica = document.querySelector("#graficapie");
+  new Chart($grafica, {
+    type: "pie",
+    data: {
+      labels: ["Terminadas", "En Proceso", "Canceladas", "No Iniciadas"],
+      datasets: [{
+        data: [4, 6, 2, 3],
+        backgroundColor: ["rgba(163,221,203,0.2)", "rgba(232,233,161,0.2)", "rgba(230,181,102,0.2)", "rgba(229,112,126,0.2)"],
+        borderColor: ["rgba(163,221,203,1)", "rgba(232,233,161,1)", "rgba(230,181,102,1)", "rgba(229,112,126,1)"],
+        borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true
+    }
+  });
+
+  // Gráfica de Barras
+  const ctx = document.getElementById("myChart");
+  new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: ["Monto Contratado y Administrado", "Monto Ejercido"],
+      datasets: [{
+        label: "Millones de Pesos",
+        data: [28500000, 14000000],
+        backgroundColor: ["rgba(232,233,161,0.2)", "rgba(163,221,203,0.2)"],
+        borderColor: ["rgba(232,233,161,1)", "rgba(163,221,203,1)"],
+        borderWidth: 2,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
+
                     </center>
                   </div>
                   <div class="col-sm-6 mt-5">
