@@ -34,50 +34,74 @@
         </nav>
       </div>
       <div class="top-menu">
-        <!-- Se añadió justify-content-end para alinear todo a la derecha -->
         <nav
-          class="navbar navbar-expand justify-content-end"
+          class="navbar navbar-expand-lg navbar-dark justify-content-end"
           style="background-color: #566573"
         >
-          <strong class="navbar-nav">
-            <li id="home" class="nav-item active">
-              <a class="nav-link" href="javascript:void(0);">
-                <i class="nav-icon"></i>Inicio
-              </a>
-            </li>
+          <div class="container-fluid">
+            <!-- Botón de Hamburguesa -->
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarMain"
+              aria-controls="navbarMain"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <li id="records">
-              <a class="nav-link" href="javascript:void(0);">
-                <i class="nav-icon"></i>Registros
-              </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Año
-              </a>
-              <ul class="dropdown-menu">
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0);">2025</a>
+            <!-- Contenido colapsable -->
+            <div
+              class="collapse navbar-collapse justify-content-end"
+              id="navbarMain"
+            >
+              <strong class="navbar-nav">
+                <li id="home" class="nav-item active">
+                  <a class="nav-link" href="javascript:void(0);">
+                    <i class="nav-icon"></i>Inicio
+                  </a>
                 </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0);">2024</a>
+
+                <li id="records" class="nav-item">
+                  <a class="nav-link" href="javascript:void(0);">
+                    <i class="nav-icon"></i>Registros
+                  </a>
                 </li>
-              </ul>
-            </li>
-            <!-- Nuevo elemento de cierre de sesión -->
-            <li id="logout">
-              <!-- El href ahora apunta a la ruta de tu archivo de inicio de sesión -->
-              <a class="nav-link" href="javascript:void(0);">
-                <i class="nav-icon"></i>Cerrar sesión
-              </a>
-            </li>
-          </strong>
+
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Año
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="dropdown-item" href="javascript:void(0);"
+                        >2025</a
+                      >
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="javascript:void(0);"
+                        >2024</a
+                      >
+                    </li>
+                  </ul>
+                </li>
+
+                <li id="logout" class="nav-item">
+                  <a class="nav-link" href="javascript:void(0);">
+                    <i class="nav-icon"></i>Cerrar sesión
+                  </a>
+                </li>
+              </strong>
+            </div>
+          </div>
         </nav>
       </div>
     </div>
